@@ -1,0 +1,102 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins", "omitApi"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model menuItems {
+  id           Int         @id @default(autoincrement())
+  menuId       Int
+  sectionId    Int
+  restaurantId String      @db.Uuid
+  title        String?     @db.VarChar
+  price        Float?      @db.Real
+  description  String?
+  position     Int?        @db.SmallInt
+  image        Json?       @db.Json
+  createdAt    DateTime    @default(now()) @db.Timestamptz()
+  updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt    DateTime?   @db.Timestamptz()
+  menus        menus       @relation(fields: [menuId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  restaurants  restaurants @relation(fields: [restaurantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sections     sections    @relation(fields: [sectionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model menus {
+  id           Int         @id @default(autoincrement())
+  restaurantId String      @db.Uuid
+  title        String?     @db.VarChar
+  slug         String?     @db.VarChar
+  position     Int?        @db.SmallInt
+  description  String?
+  createdAt    DateTime    @default(now()) @db.Timestamptz()
+  updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt    DateTime?   @db.Timestamptz()
+  restaurants  restaurants @relation(fields: [restaurantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menuItems    menuItems[]
+  sections     sections[]
+}
+
+model restaurants {
+  id           String      @id @default(uuid()) @db.Uuid
+  userId       String      @db.Uuid
+  hours        Json?
+  name         String?     @db.VarChar
+  address      Json?
+  phone        Json?
+  email        Json?
+  coverImage   Json?       @db.Json
+  customHost   String?     @unique @db.VarChar
+  customDomain String?     @unique @db.VarChar
+  createdAt    DateTime    @default(now()) @db.Timestamptz()
+  updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt    DateTime?   @db.Timestamptz()
+  users        users       @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menuItems    menuItems[]
+  menus        menus[]
+  sections     sections[]
+}
+
+model sections {
+  id           Int         @id @default(autoincrement())
+  menuId       Int
+  restaurantId String      @db.Uuid
+  title        String?     @db.VarChar
+  position     Int?
+  description  String?
+  createdAt    DateTime    @default(now()) @db.Timestamptz()
+  updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt    DateTime?   @db.Timestamptz()
+  menus        menus       @relation(fields: [menuId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  restaurants  restaurants @relation(fields: [restaurantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menuItems    menuItems[]
+}
+
+model users {
+  id                   String        @id @db.Uuid
+  fullName             String?       @db.VarChar
+  stripeSubscriptionId String?       @unique @db.VarChar
+  stripeCustomerId     String?       @unique @db.VarChar
+  trialEndsAt          DateTime?     @db.Timestamptz()
+  createdAt            DateTime      @default(now()) @db.Timestamptz()
+  updatedAt            DateTime      @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt            DateTime?     @db.Timestamptz()
+  restaurants          restaurants[]
+  feedback             feedback[]
+}
+
+model feedback {
+  id        Int       @id @default(autoincrement())
+  type      String?   @db.VarChar
+  comment   String?
+  userId    String    @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz()
+  deletedAt DateTime? @db.Timestamptz()
+  users     users     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
