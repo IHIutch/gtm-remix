@@ -30,7 +30,13 @@ export const shouldRevalidate = () => false;
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { tagName: "link", rel: "preload", href: data?.data?.coverImage?.src, as: "image" },
+    {
+      tagName: "link",
+      rel: "preload",
+      href: data?.data?.coverImage?.src,
+      as: "image",
+      fetchpriority: "high"
+    },
   ];
 };
 
