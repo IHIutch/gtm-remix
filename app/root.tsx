@@ -38,9 +38,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export const shouldRevalidate = () => false;
 
 export const loader = defineLoader(async ({ request }) => {
-  const { hostname } = new URL(request.url)
-  const [tenant, domain, tld] = hostname.split(".")
-  console.log({ tenant, domain, tld })
+  // const { hostname } = new URL(request.url)
+  // const [tenant, domain, tld] = hostname.split(".")
+  // console.log({ tenant, domain, tld })
 
   // if tld is undefined it means there was not subdomain
   // so we can redirect to another url and set a default tenant
@@ -53,7 +53,8 @@ export const loader = defineLoader(async ({ request }) => {
 
   const data = await prisma.restaurants.findUnique({
     where: {
-      customHost: tenant
+      // customHost: tenant
+      customHost: "whereslloyd"
     },
     omit: {
       id: true,

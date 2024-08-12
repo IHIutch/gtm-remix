@@ -15,24 +15,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export const loader = defineLoader(async ({ request, params }) => {
 
-    const { hostname } = new URL(request.url)
-    const [tenant, domain, tld] = hostname.split(".")
-    console.log({ tenant, domain, tld })
-
-    // if tld is undefined it means there was not subdomain
-    // so we can redirect to another url and set a default tenant
-    // or even redirect to a route where the tenant is not required
-    // like a landing or login form
-    // if (!tld) {
-    //   throw new Response('Not Found', { status: 404 })
-    // }
-
+    // const { hostname } = new URL(request.url)
+    // const [tenant, domain, tld] = hostname.split(".")
+    // console.log({ tenant, domain, tld })
 
     const data = await prisma.menus.findFirst({
         where: {
             slug: params.slug,
             restaurants: {
-                customHost: tenant
+                customHost: "whereslloyd"
             }
         },
         include: {
