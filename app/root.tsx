@@ -35,7 +35,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       rel: "preload",
       href: data?.data?.coverImage?.src,
       as: "image",
-      fetchpriority: "high"
+      fetchPriority: "high"
     },
   ];
 };
@@ -145,6 +145,7 @@ export default function App() {
               src={data.coverImage.src}
               alt=""
               className="size-full object-cover"
+              fetchPriority="high"
             />
           </div>
           : null}
