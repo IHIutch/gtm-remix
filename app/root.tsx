@@ -35,7 +35,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       rel: "preload",
       href: data?.data?.coverImage?.src,
       as: "image",
-      fetchPriority: "high"
+      fetchPriority: "high",
+      crossOrigin: ""
     },
   ];
 };
@@ -141,11 +142,17 @@ export default function App() {
       <div className="aspect-[16/9] sm:aspect-[21/9] relative flex flex-col">
         {data?.coverImage?.src ?
           <div className="absolute size-full z-0">
-            <img
-              src={data.coverImage.src}
-              alt=""
-              className="size-full object-cover"
-              fetchPriority="high"
+            <BlurImage
+              blurDataUrl={data.coverImage.blurDataURL || undefined}
+              className="overflow-hidden size-full"
+              img={(
+                <img
+                  src={data.coverImage.src}
+                  alt=""
+                  className="size-full object-cover"
+                  fetchPriority="high"
+                />
+              )}
             />
           </div>
           : null}
