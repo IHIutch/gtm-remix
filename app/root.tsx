@@ -7,12 +7,12 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import "./tailwind.css";
 import { prisma } from "./utils/prisma.server";
-import { unstable_defineLoader as defineLoader, MetaFunction } from '@remix-run/node'
+import { unstable_defineLoader as defineLoader, LinksFunction, MetaFunction } from '@remix-run/node'
 import { formatTime } from "./utils/functions";
 import { BlurImage } from "./components/blur-image";
 import dayjs from "dayjs";
+import stylesHref from "./tailwind.css?url";
 
 export const DAYS_OF_WEEK = [
   'Sunday',
@@ -26,16 +26,19 @@ export const DAYS_OF_WEEK = [
 
 const weekdayName = dayjs().format('dddd') as typeof DAYS_OF_WEEK[number]
 
+export const shouldRevalidate = () => false;
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { tagName: "link", rel: "preload", href: data?.data?.coverImage?.src, as: "image" },
   ];
 };
 
-export const shouldRevalidate = () => false;
+export const links: LinksFunction = () => {
+  return [
+    { rel: "stylesheet", href: stylesHref },
+  ]
+}
 
 export const loader = defineLoader(async ({ request }) => {
   // const { hostname } = new URL(request.url)
@@ -147,7 +150,7 @@ export default function App() {
           </div>
           : null}
         <div className="max-w-screen-lg mx-auto z-10 relative mt-auto w-full pb-8 px-4">
-          <h1 className="mb-4 text-4xl text-white font-bold [text-shadow:0_2px_1px_black]">{data.name}</h1>
+          <h1 className="mb-4 text-5xl text-white font-bold [text-shadow:0_2px_1px_black]">{data.name}</h1>
           <div className="flex items-center text-white gap-8">
             {data?.phone?.length > 0 ? (
               <div className="flex gap-2">
@@ -184,7 +187,12 @@ export default function App() {
           <ul className="flex gap-2">
             {data.menus.map(m => (
               <li key={m.slug}>
-                <Link to={`/${m.slug}`} preventScrollReset={true} className="underline">{m.title}</Link>
+                <Link
+                  preventScrollReset={true}
+                  prefetch="intent"
+                  to={`/${m.slug}`}
+                  className="underline"
+                >{m.title}</Link>
               </li>
             ))}
           </ul>

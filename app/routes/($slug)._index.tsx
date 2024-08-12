@@ -1,5 +1,4 @@
-import * as React from 'react'
-import type { MetaFunction } from "@remix-run/node";
+import type { HeadersFunction, MetaFunction } from "@remix-run/node";
 import { unstable_defineLoader as defineLoader } from '@remix-run/node'
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "#/utils/prisma.server";
@@ -9,9 +8,18 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
     return [
         { title: data?.data.title },
-        { name: "description", content: "Welcome to Remix!" },
+        { name: "description", content: data?.data.description },
     ];
 };
+
+export const headers: HeadersFunction = ({
+    _actionHeaders,
+    _errorHeaders,
+    _loaderHeaders,
+    _parentHeaders,
+}) => ({
+    "Cache-Control": "max-age=300, s-maxage=3600",
+});
 
 export const loader = defineLoader(async ({ request, params }) => {
 
@@ -23,6 +31,7 @@ export const loader = defineLoader(async ({ request, params }) => {
         where: {
             slug: params.slug,
             restaurants: {
+                // customHost: tenant
                 customHost: "whereslloyd"
             }
         },
