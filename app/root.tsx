@@ -135,17 +135,10 @@ export default function App() {
       <div className="aspect-[16/9] sm:aspect-[21/9] relative flex flex-col">
         {data?.coverImage?.src ?
           <div className="absolute size-full z-0">
-            <BlurImage
-              blurDataUrl={data.coverImage.blurDataURL || undefined}
-              className="overflow-hidden size-full"
-              img={(
-                <img
-                  key={data.coverImage.src}
-                  src={data.coverImage.src}
-                  alt=""
-                  className="size-full object-cover"
-                />
-              )}
+            <img
+              src={data.coverImage.src}
+              alt=""
+              className="size-full object-cover"
             />
           </div>
           : null}

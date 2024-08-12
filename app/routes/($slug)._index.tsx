@@ -4,12 +4,17 @@ import { useLoaderData } from "@remix-run/react";
 import { prisma } from "#/utils/prisma.server";
 import { BlurImage } from '#/components/blur-image';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data, matches }) => {
 
+    const parentMeta = matches.flatMap(
+        (match) => match.meta ?? []
+    );
     return [
+        ...parentMeta,
         { title: data?.data.title },
-        { name: "description", content: data?.data.description },
+        { name: "description", content: data?.data.description }
     ];
+
 };
 
 export const headers: HeadersFunction = ({
@@ -103,7 +108,6 @@ export default function Index() {
                                         img={(
                                             <img
                                                 loading="lazy"
-                                                key={mi.image.src}
                                                 src={mi.image.src}
                                                 alt=""
                                                 className="size-full object-cover"
