@@ -8,7 +8,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import { prisma } from "./utils/prisma.server";
-import { unstable_defineLoader as defineLoader, LinksFunction, MetaFunction } from '@remix-run/node'
+import { LinksFunction, MetaFunction } from '@remix-run/node'
+import { unstable_defineLoader as defineLoader } from "@vercel/remix";
 import { formatTime } from "./utils/functions";
 import { BlurImage } from "./components/blur-image";
 import dayjs from "dayjs";
@@ -35,7 +36,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       rel: "preload",
       href: data?.data?.coverImage?.src,
       as: "image",
-      fetchPriority: "high",
+      fetchpriority: "high",
       crossOrigin: ""
     },
   ];
@@ -47,7 +48,7 @@ export const links: LinksFunction = () => {
   ]
 }
 
-export const loader = defineLoader(async ({ request }) => {
+export const loader = defineLoader(async ({ _request }) => {
   // const { hostname } = new URL(request.url)
   // const [tenant, domain, tld] = hostname.split(".")
   // console.log({ tenant, domain, tld })

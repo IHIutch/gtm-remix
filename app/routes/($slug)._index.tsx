@@ -1,5 +1,5 @@
 import type { HeadersFunction, MetaFunction } from "@remix-run/node";
-import { unstable_defineLoader as defineLoader } from '@remix-run/node'
+import { unstable_defineLoader as defineLoader } from "@vercel/remix";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "#/utils/prisma.server";
 import { BlurImage } from '#/components/blur-image';
