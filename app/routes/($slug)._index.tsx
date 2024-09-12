@@ -1,5 +1,4 @@
 import type { HeadersFunction, MetaFunction } from "@remix-run/node";
-import { unstable_defineLoader as defineLoader } from "@vercel/remix";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "#/utils/prisma.server";
 import { BlurImage } from '#/components/blur-image';
@@ -26,7 +25,7 @@ export const headers: HeadersFunction = ({
     "Cache-Control": "max-age=300, s-maxage=3600",
 });
 
-export const loader = defineLoader(async ({ request, params }) => {
+export const loader = async ({ request, params }) => {
 
     // const { hostname } = new URL(request.url)
     // const [tenant, domain, tld] = hostname.split(".")
@@ -84,7 +83,7 @@ export const loader = defineLoader(async ({ request, params }) => {
     // console.log({ data })
 
     return { data }
-})
+}
 
 
 export default function Index() {

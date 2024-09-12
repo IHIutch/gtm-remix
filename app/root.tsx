@@ -9,7 +9,6 @@ import {
 } from "@remix-run/react";
 import { prisma } from "./utils/prisma.server";
 import { LinksFunction, MetaFunction } from '@remix-run/node'
-import { unstable_defineLoader as defineLoader } from "@vercel/remix";
 import { formatTime } from "./utils/functions";
 import { BlurImage } from "./components/blur-image";
 import dayjs from "dayjs";
@@ -48,7 +47,7 @@ export const links: LinksFunction = () => {
   ]
 }
 
-export const loader = defineLoader(async ({ _request }) => {
+export const loader = async ({ request }) => {
   // const { hostname } = new URL(request.url)
   // const [tenant, domain, tld] = hostname.split(".")
   // console.log({ tenant, domain, tld })
@@ -115,7 +114,7 @@ export const loader = defineLoader(async ({ _request }) => {
   }
   return { data }
 
-})
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
